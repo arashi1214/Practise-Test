@@ -1,0 +1,27 @@
+<!--
+aframe，透過 Mozilla VR 建立VR用的套件：https://aframe.io/docs/1.2.0/core/entity.html
+three.js document：https://threejs.org/docs/index.html#manual/en/introduction/Creating-a-scene
+aframe是基於there.js而來
+-->
+
+<script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
+<script src="https://rawgit.com/jeromeetienne/ar.js/master/aframe/build/aframe-ar.js"></script>
+<script>THREEx.ArToolKitContext.baseURL = 'https://rawgit.com/jeromeetienne/ar.js/master/three.js/'</script>
+
+<body style='margin : 0px; overflow: hidden;'>
+	<!-- a-scene 建立3D Scence -->
+	<a-scene embedded artoolkit='sourceType: webcam'>
+		<!-- 建立一個3D的box，並給予放置位置與透明度 -->
+		<!-- 
+		a-box 正方體
+		a-sphere 球體
+		position x y z值，以空白分隔
+		opacity 透明度
+		<a-box position='0 0.5 0' material='opacity: 0.5;'></a-box>
+		-->
+		<a-box position='0 0.5 0' material='opacity: 0.5;'></a-box>
+
+		<!-- 加入AR Camera，此Camear會跟著手機移動-->
+		<a-marker-camera preset='hiro'></a-marker-camera>
+	</a-scene>
+</body>

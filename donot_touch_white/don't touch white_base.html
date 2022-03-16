@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+<head leng="en">
+	<title>別踩白塊兒 DEMO</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	
+	<style type="text/css">
+		*{
+			padding: 0;
+			margin: 0;
+		}
+		
+		.canvas_bg {
+			margin-top: 10px;
+			border: 1px solid black;
+			box-shadow: 0px 0px 20px #102327;
+		}
+		
+		#score {
+			margin-top: 10px;
+			color: #365669;
+			margin: 0 auto;
+			width: 350px;
+			height: 80px;
+		}
+
+		#game_start{
+			margin:0 auto;
+  			width: 100px;
+		}
+
+
+		#clock{
+			font-size: 4em;
+			color: red;
+			margin: 0 auto;
+			width: 350px;
+			height: 80px;
+		}
+	</style>
+</head>
+<body>
+	<audio id="audio-element" src="C.mp3"></audio>
+	<div style = "width: 410px; margin: 0 auto;">
+		<canvas id="canvas" class="canvas_bg" height="512px;" width="410px;">
+		</canvas>
+		<div id="clock">00：01：00</div>
+	</div>
+		<div id="game_start">
+			<button class="btn btn-secondary" type="button" onclick="Start()">開始遊戲</button>
+		</div>
+
+	<script type="text/javascript">
+		var c=document.getElementById("canvas");
+   		var ctx=c.getContext("2d");
+
+		var ran_line;
+   		var box_list;
+   		var box_len;
+
+   		var del_status;
+   		var score;
+   		var great;
+   		var miss;
+
+   		var key_down_status;
+
+   		function Start(){
+	   		ran_line = 0;
+	   		box_list = []
+	   		box_len = 0;
+
+	   		del_status = false;
+	   		score = 0;
+	   		great = 0;
+	   		long_great = 0;
+	   		miss = 0;
+	   		key_down_status = false;
+
+	   		document.getElementById("clock").innerHTML = "00：01：00";
+
+	   		ctx.clearRect(0,0,410,512);//清除畫布重新繪製
+
+	   		addboxstatus = setInterval(AddBox, 1000);
+			boxmovestatus = setInterval(BoxMove, 1);
+			countdownstatus = setInterval(CountDown, 1000);			
+   		}
+
+		function drawbox(){
+			ctx.fillStyle ="black";
+			//console.log(box_list);
+			for(var k = 0; k < box_len; k++)//畫掉落的方格
+			{
+				if (box_list[k].y >= 512){
+					del_status = true;
+					miss = miss + 1;
+				}
+				ctx.fillRect(box_list[k].x, box_list[k].y, 82, box_list[k].type * 60);
+			}
+			if (del_status){
+				box_list.shift();
+				del_status = false;
+				box_len -= 1;
+			}
+
+		}
+
+		function AddBox(){
+			var ran_line = Math.floor(Math.random()*5);
+			var ran_type = Math.floor(Math.random()*2);
+			switch(ran_line){
+				case 0:
+					box_list.push({x:0,y:0,type:ran_type + 1});
+					box_len += 1;
+					break;
+				case 1:
+					box_list.push({x:82,y:0,type:ran_type + 1});
+					box_len += 1;
+					break;
+				case 2:
+					box_list.push({x:164,y:0,type:ran_type + 1});
+					box_len += 1;
+					break;
+				case 3:
+					box_list.push({x:246,y:0,type:ran_type + 1});
+					box_len += 1;
+					break;
+				case 4:
+					box_list.push({x:328,y:0,type:ran_type + 1});
+					box_len += 1;
+					break;
+			}
+		}
+
+		function BoxMove(){
+			//console.log("呼叫");
+			for(var k = 0; k < box_len; k++){//使方格移動
+				box_list[k].y = box_list[k].y + 1;
+			}
+			ctx.clearRect(0,0,410,512);//清除畫布重新繪製
+			drawbox();
+		}
+
+		// 監聽按鍵
+		document.onkeydown=function(e)
+		{
+			if(box_list[0].type == 1){
+				switch(e.keyCode){
+					//d
+					case 68:
+						if(box_list[0].y + 80 >= 512 && box_list[0].y < 512 && box_list[0].x == 0){
+							box_list.shift();
+							box_len -= 1;
+
+							great = great + 1;
+							playAudio("C");
+
+						}else{
+							playAudio("miss");
+						}
+						break;
+					//f
+					case 70:
+						if(box_list[0].y + 80 >= 512 && box_list[0].y < 512 && box_list[0].x == 82){
+							box_list.shift();
+							box_len -= 1;
+							great = great + 1;
+							playAudio("D");
+						}else{
+							playAudio("miss");
+						}
+						break;
+					//g
+					case 71:
+						if(box_list[0].y + 80 >= 512 && box_list[0].y < 512 && box_list[0].x == 164){
+							box_list.shift();
+							box_len -= 1;
+							great = great + 1;
+							playAudio("E");
+						}else{
+							playAudio("miss");
+						}
+						break;
+					//h
+					case 72:
+						if(box_list[0].y + 80 >= 512 && box_list[0].y < 512 && box_list[0].x == 246){
+							box_list.shift();
+							box_len -= 1;
+							great = great + 1;
+							playAudio("F");
+						}else{
+							playAudio("miss");
+						}
+						break;
+					//j
+					case 74:
+						if(box_list[0].y + 80 >= 512 && box_list[0].y < 512 && box_list[0].x == 328){
+							box_list.shift();
+							box_len -= 1;
+							great = great + 1;
+							playAudio("G");
+						}else{
+							playAudio("miss");
+						}
+						break;
+					}
+			}else if(key_down_status == false){
+				switch(e.keyCode){
+					//d
+					case 68:
+						if(box_list[0].y + 140 >= 512 && box_list[0].y < 512 && box_list[0].x == 0){
+							playAudio("C");
+							key_down_status = true;
+						}
+						break;
+					//f
+					case 70:
+						if(box_list[0].y + 140 >= 512 && box_list[0].y < 512 && box_list[0].x == 82){
+							playAudio("D");
+							key_down_status = true;
+						}
+						break;
+					//g
+					case 71:
+						if(box_list[0].y + 140 >= 512 && box_list[0].y < 512 && box_list[0].x == 164){
+							playAudio("E");
+							key_down_status = true;
+						}
+						break;
+					//h
+					case 72:
+						if(box_list[0].y + 140 >= 512 && box_list[0].y < 512 && box_list[0].x == 246){
+							playAudio("F");
+							key_down_status = true;
+						}
+						break;
+					//j
+					case 74:
+						if(box_list[0].y + 140 >= 512 && box_list[0].y < 512 && box_list[0].x == 328){
+							playAudio("G");
+							key_down_status = true;
+						}
+						break;
+				}
+			}
+		} 
+
+		document.onkeyup=function(e){
+			if (key_down_status){
+				switch(e.keyCode){
+					//d
+					case 68:
+						if(box_list[0].y + 20 >= 512 && box_list[0].y <= 512 && box_list[0].x == 0){
+							key_down_status = true;
+							long_great = long_great + 1;
+						}else{
+							const audio = document.getElementById("audio-element");
+							audio.pause();
+							playAudio("miss");
+						}
+						key_down_status = false;
+						break;
+					//f
+					case 70:
+						if(box_list[0].y + 20 >= 512 && box_list[0].y <= 512 && box_list[0].x == 82){
+							key_down_status = true;
+							long_great = long_great + 1;
+						}else{
+							const audio = document.getElementById("audio-element");
+							audio.pause();
+							playAudio("miss");
+						}
+						key_down_status = false;
+						break;
+					//g
+					case 71:
+						if(box_list[0].y + 20 >= 512 && box_list[0].y <= 512 && box_list[0].x == 164){
+							key_down_status = true;
+							long_great = long_great + 1;
+						}else{
+							const audio = document.getElementById("audio-element");
+							audio.pause();
+							playAudio("miss");
+						}
+						key_down_status = false;
+						break;
+					//h
+					case 72:
+						if(box_list[0].y + 20 >= 512 && box_list[0].y <= 512 && box_list[0].x == 246){
+							key_down_status = true;
+							long_great = long_great + 1;
+						}else{
+							const audio = document.getElementById("audio-element");
+							audio.pause();
+							playAudio("miss");	
+						}
+						key_down_status = false;
+						break;
+					//j
+					case 74:
+						if(box_list[0].y + 20 >= 512 && box_list[0].y <= 512 && box_list[0].x == 328){
+							key_down_status = true;
+							long_great = long_great + 1;
+						}else{
+							const audio = document.getElementById("audio-element");
+							audio.pause();	
+							playAudio("miss");
+						}
+						key_down_status = false;
+						break;
+				}
+			}
+		}
+
+		function CountDown(){
+			var time = document.getElementById("clock").innerHTML.split("：");
+
+			if(parseInt(time[2]) <= 0 && parseInt(time[1]) <= 0 && parseInt(time[0]) <= 0){
+				clearInterval(addboxstatus);
+				clearInterval(boxmovestatus);
+				clearInterval(countdownstatus);
+				
+				ctx.clearRect(0,0,410,512);
+
+				ctx.font = "20pt Arial";
+				ctx.fillText("Score：" + String(long_great * 150 + great * 100 - miss * 50), 150, 180);
+				ctx.fillText("Great：" + String(great), 150, 230);
+				ctx.fillText("Miss：" + String(miss), 150, 280);
+				ctx.fillText("LongGreat：" + String(long_great), 150, 330);
+
+			}else if(parseInt(time[1]) <= 0 && parseInt(time[0]) > 0){
+				time[0] = String(parseInt(time[0]) - 1);
+				time[1] = "59";
+
+				if (time[0].length < 2){
+					time[0] = "0" + time[0];
+				}
+
+				document.getElementById("clock").innerHTML = time.join("：");
+			}else if(parseInt(time[2]) <= 0 && parseInt(time[1]) > 0){
+				time[1] = String(parseInt(time[1]) - 1);
+				time[2] = "59";
+
+				if (time[1].length < 2){
+					time[1] = "0" + time[1];
+				}
+
+				document.getElementById("clock").innerHTML = time.join("：");
+			}else{
+				time[2] = String(parseInt(time[2]) - 1);
+
+				if (time[2].length < 2){
+					time[2] = "0" + time[2];
+				}
+				document.getElementById("clock").innerHTML = time.join("：");
+			}
+			
+		}
+
+		function playAudio(n) {
+			const audio = document.getElementById("audio-element");
+			audio.src = n + ".mp3";
+			audio.currentTime = 0;
+			audio.play();
+		}
+	</script>
+</body>
+</html>
+
+<!-- 
+課後作業(?)
+增加按鍵的種類(例如長按，兩鍵同時按)
+掉落速度的調整
+音效的變更
+對應指定的曲子
+-->
