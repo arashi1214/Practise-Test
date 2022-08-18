@@ -38,7 +38,7 @@ driver.find_element_by_class_name("inLGbtn").click()
 # -------- 切到會員介面並簽到 ------ #
 driver.get("https://www.kingstone.com.tw/ksmember/home/")
 
-driver.find_element_by_class_name("calender").click()
+driver.find_element(By.CLASS_NAME, "calender").click()
 driver.quit()
 
 # -------- 輸出上次運行時間以確認是否有正常運行 ------ #

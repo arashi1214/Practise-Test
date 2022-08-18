@@ -13,7 +13,7 @@ driver = webdriver.Chrome("./chrome/chromedriver.exe")
 
 # -------- 連結到300登入介面 ------ #
 driver.get("https://bbs.yamibo.com/")
-driver.find_element_by_class_name("oy_m_r_0").click()
+driver.find_element(By.CLASS_NAME, "oy_m_r_0").click()
 time.sleep(1)
 # -------- 輸入帳密並登入 ------ #
 load_dotenv(encoding="utf-8") # 載入.env
@@ -24,7 +24,7 @@ driver.find_element(By.NAME, "loginsubmit").click()
 time.sleep(2)
 
 # -------- 簽到 ------ #
-driver.find_element_by_xpath('//*[@id="nv_forum"]/div[6]/div/div/ul[2]/li/a[2]').click()
+driver.find_element(By.XPATH, '//*[@id="nv_forum"]/div[6]/div/div/ul[2]/li/a[2]').click()
 time.sleep(1)
 driver.quit()
 
