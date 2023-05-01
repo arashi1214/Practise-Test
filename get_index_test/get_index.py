@@ -94,7 +94,6 @@ for i in range(nrow): # 總行數
 					if driver.find_element_by_xpath('/html/body/div/div[2]/div[2]/ul[' + str(m) + ']/li[1]').text == Login_number:
 						Part_number = driver.find_element_by_xpath('/html/body/div/div[2]/div[2]/ul[' + str(m) + ']/li[3]').text + driver.find_element_by_xpath('/html/body/div/div[2]/div[2]/ul[' + str(m) + ']/li[4]').text
 						break
-					
 				except:
 					print("找不到對應的登入號：", Login_number)
 

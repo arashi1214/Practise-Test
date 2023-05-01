@@ -59,9 +59,6 @@ else:
 	image_to_txt(name, maxSize)
 print("程式結束")
 
-
-
-
 """
 轉角度
 img = Image.open('joy_cat.jpg') #放入檔名
