@@ -7,13 +7,13 @@ from dotenv import load_dotenv
 
 import datetime
 import pandas
+import time
 
 
 # -------- 以不顯示瀏覽器的方式啟動 ------ #
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument('--headless') # 啟動無頭模式
 chrome_options.add_argument('--disable-gpu') # windowsd必須加入此行
-
 
 # -------- 確認 chromedriver 版本 ------ #
 try:
@@ -22,6 +22,7 @@ except:
 	import chrome_helper
 	chrome_helper.check_browser_driver_available()
 	driver = webdriver.Chrome(chrome_options=chrome_options, executable_path="./chrome/chromedriver.exe")
+
 
 # -------- 連結到金石堂登入介面 ------ #
 driver.get("https://www.kingstone.com.tw/login")
@@ -38,7 +39,15 @@ driver.find_element_by_class_name("inLGbtn").click()
 # -------- 切到會員介面並簽到 ------ #
 driver.get("https://www.kingstone.com.tw/ksmember/home/")
 
-driver.find_element(By.CLASS_NAME, "calender").click()
+time.sleep(1)
+
+try:
+	driver.find_element(By.ID, "promoClose").click()
+	time.sleep(1)
+except:
+	pass
+	
+driver.find_element(By.XPATH, '//*[@id="dailycheck"]/ul/li[7]/a').click()
 driver.quit()
 
 # -------- 輸出上次運行時間以確認是否有正常運行 ------ #
